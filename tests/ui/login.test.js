@@ -1,13 +1,11 @@
-const { test, expect } = require('@playwright/test');
 
-test('Login Test - UI Testing Playground', async ({ page }) => {
-    await page.goto('http://www.uitestingplayground.com/sampleapp');
+const { test } = require('@playwright/test');
+const { LoginPage } = require('../pages/LoginPage');
 
-    // Fill in login form
-    await page.fill('input[name="UserName"]', 'TestUser');
-    await page.fill('input[name="Password"]', 'pwd'); // The password for login is 'pwd'
-    await page.click('button#login');
+test('Login Test with Page Object Model', async ({ page }) => {
+    const loginPage = new LoginPage(page);
 
-    // Verify successful login message
-    await expect(page.locator('#loginstatus')).toHaveText('Welcome, TestUser!');
+    await loginPage.goto();
+    await loginPage.login('TestUser', 'pwd');
+    await loginPage.verifyLoginSuccess('TestUser');
 });
