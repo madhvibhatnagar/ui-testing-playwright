@@ -1,4 +1,4 @@
-name: Playwright UI Tests (POM)
+name: Playwright UI Tests with Allure Reports
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # ✅ Ensure correct format
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4  # ✅ Ensure correct format
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -26,18 +26,16 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      
-      
-      - name: Generate Allure Report
-  run: npx allure-commandline generate allure-results -o allure-report
 
       - name: Run Playwright Tests
-        run: npx playwright test --reporter=dot,html
+        run: npx playwright test --reporter=dot,allure-playwright
 
-      - name: Upload Playwright Report
+      - name: Generate Allure Report
+        run: npx allure-commandline generate allure-results -o allure-report
+
+      - name: Upload Allure Report
         if: always()
-        uses: actions/upload-artifact@v4  # ✅ Ensure correct format
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+          name: allure-report
+   
